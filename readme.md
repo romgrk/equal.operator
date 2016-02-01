@@ -1,6 +1,10 @@
 
-# LHS/RHS operator
-==========================-
+## LHS/RHS operator
+==================
+
+Selects left or right side of equal-sign (or colon).
+
+**you are required to map it by yourself**
 
 Usage: 
 ```viml
@@ -17,7 +21,6 @@ vmap =H <Plug>(visual-Lhs)
 vmap =L <Plug>(visual-Rhs)
 ```
 
-**you are required to map it by yourself**
 
 <!--![alt text](./pp_self2.png "")-->
 
