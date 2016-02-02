@@ -2,9 +2,9 @@
 ## LHS/RHS operator
 ==================
 
-Selects left or right side of equal-sign (or colon).
+Selects left or right side of the equal-sign (or colon).
 
-**you are required to map it by yourself**
+**No default mappings**
 
 Usage: 
 ```viml
