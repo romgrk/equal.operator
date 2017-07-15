@@ -2,6 +2,7 @@
 " Author: romgrk
 " Date: 01 Feb 2016
 " Description: LHS/RHS operators:                                                   {{{
+" !::exe [SO]
 "
 " 1. operate on left/right side of equal sign
 " 2. if no equal sign is present, tries to match colon sign
@@ -13,15 +14,15 @@
 "
 " }}}
 
-onoremap <Plug>(operator-lhs) :<C-u>normal <C-r>=<SID>selectLeftOperand('i')<CR><CR>
-onoremap <Plug>(operator-rhs) :<C-u>normal <C-r>=<SID>selectRightOperand('i')<CR><CR>
-onoremap <Plug>(operator-Lhs) :<C-u>normal <C-r>=<SID>selectLeftOperand('a')<CR><CR>
-onoremap <Plug>(operator-Rhs) :<C-u>normal <C-r>=<SID>selectRightOperand('a')<CR><CR>
+onoremap <Plug>(operator-lhs) :<C-u>normal! <C-r>=<SID>selectLeftOperand('i')<CR><CR>
+onoremap <Plug>(operator-rhs) :<C-u>normal! <C-r>=<SID>selectRightOperand('i')<CR><CR>
+onoremap <Plug>(operator-Lhs) :<C-u>normal! <C-r>=<SID>selectLeftOperand('a')<CR><CR>
+onoremap <Plug>(operator-Rhs) :<C-u>normal! <C-r>=<SID>selectRightOperand('a')<CR><CR>
 
-vmap <expr><Plug>(visual-lhs) "\<Esc>" . <SID>selectLeftOperand('i')
-vmap <expr><Plug>(visual-rhs) "\<Esc>" . <SID>selectRightOperand('i')
-vmap <expr><Plug>(visual-Lhs) "\<Esc>" . <SID>selectLeftOperand('a')
-vmap <expr><Plug>(visual-Rhs) "\<Esc>" . <SID>selectRightOperand('a')
+vnoremap <expr><Plug>(visual-lhs) "\<Esc>" . <SID>selectLeftOperand('i')
+vnoremap <expr><Plug>(visual-rhs) "\<Esc>" . <SID>selectRightOperand('i')
+vnoremap <expr><Plug>(visual-Lhs) "\<Esc>" . <SID>selectLeftOperand('a')
+vnoremap <expr><Plug>(visual-Rhs) "\<Esc>" . <SID>selectRightOperand('a')
 
 fu! s:selectLeftOperand(target) "                                       {{{
     let iStart = s:findAssignment()
@@ -60,10 +61,10 @@ fu! s:selectRightOperand(target) "                                      {{{
         if last_char == ',' || last_char == ';'
             let keys = iStart.'|v'. (string_length - 1) . '|'
         else
-            let keys = iStart.'|v$'
+            let keys = iStart.'|v$h'
         end
     else
-        let keys = iStart.'|v$'
+        let keys = iStart.'|v$h'
     end
     return keys
 endfunction "                                                                }}}
@@ -89,3 +90,4 @@ fu! s:findAssignment() "                                                   {{{
     " Fail & return
     return -1
 endfu "                                                                }}}
+
