@@ -2,7 +2,7 @@
 " Author: romgrk
 " Date: 01 Feb 2016
 " Description: LHS/RHS operators:                                                   {{{
-" !::exe [SO]
+" !::exe [So]
 "
 " 1. operate on left/right side of equal sign
 " 2. if no equal sign is present, tries to match colon sign
@@ -11,6 +11,7 @@
 " Test:
 " let value = 'string'
 " key: "value"
+" let value += 'string'
 "
 " }}}
 
@@ -23,6 +24,19 @@ vnoremap <expr><Plug>(visual-lhs) "\<Esc>" . <SID>selectLeftOperand('i')
 vnoremap <expr><Plug>(visual-rhs) "\<Esc>" . <SID>selectRightOperand('i')
 vnoremap <expr><Plug>(visual-Lhs) "\<Esc>" . <SID>selectLeftOperand('a')
 vnoremap <expr><Plug>(visual-Rhs) "\<Esc>" . <SID>selectRightOperand('a')
+
+if get(g:, 'equal_operator_default_mappings', 1)
+    omap il <Plug>(operator-rhs)
+    omap ih <Plug>(operator-lhs)
+    omap al <Plug>(operator-Rhs)
+    omap ah <Plug>(operator-Lhs)
+
+    xmap il <Plug>(visual-rhs)
+    xmap ih <Plug>(visual-lhs)
+    xmap al <Plug>(visual-Rhs)
+    xmap ah <Plug>(visual-Lhs)
+end
+
 
 fu! s:selectLeftOperand(target) "                                       {{{
     let iStart = s:findAssignment()
