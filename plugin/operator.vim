@@ -1,19 +1,8 @@
 " File: operator.vim
 " Author: romgrk
 " Date: 01 Feb 2016
-" Description: LHS/RHS operators:                                                   {{{
-" !::exe [So]
-"
-" 1. operate on left/right side of equal sign
-" 2. if no equal sign is present, tries to match colon sign
-" 3. if no match is made, fails
-"
-" Test:
-" let value = 'string'
-" key: "value"
-" let value += 'string'
-"
-" }}}
+" Description: LHS/RHS operators
+" !::exe [so %]
 
 onoremap <Plug>(operator-lhs) :<C-u>normal! <C-r>=<SID>selectLeftOperand('i')<CR><CR>
 onoremap <Plug>(operator-rhs) :<C-u>normal! <C-r>=<SID>selectRightOperand('i')<CR><CR>
@@ -38,70 +27,86 @@ if get(g:, 'equal_operator_default_mappings', 1)
 end
 
 
+" Specs                                                   {{{
+"
+" 1. operate on left/right side of equal sign
+" 2. if no equal sign is present, tries to match colon sign
+" 3. if no match is made, fails
+"
+" Test:
+"
+" let value = get_value()
+" String->Value("ok");
+"        key: "value"
+" let value += 'string'
+"      key => "value"
+" let value >>= 'string'
+" return value
+"
+" }}}
+
 fu! s:selectLeftOperand(target) "                                       {{{
-    let iStart = s:findAssignment()
-    if iStart == -1
+    let pos = s:findAssignment(0)
+    if empty(pos)
         return ''
     end
-    if a:target == 'i'
-        let iStart = iStart - 1
-        if getline('.')[iStart -1] == ' '
-            let iStart = iStart - 1
-        end
-    end
-    let keys = iStart.'|v^'
-    return keys
+
+    let column =
+        \ a:target == 'i' ?
+        \     pos[0] : pos[1]
+
+    echom column
+    let g:keys = column.'|v^'
+    return g:keys
 endfu
 fu! s:selectRightOperand(target) "                                      {{{
-    let iStart = s:findAssignment()
-    if iStart == -1
+    let pos = s:findAssignment(1)
+    if empty(pos)
         return ''
     end
-    if a:target == 'i'
-        let nextChar = getline('.')[iStart]
-        if (nextChar == '>' || nextChar == '=')
-            let iStart = iStart + 2
-        else
-            let iStart = iStart + 1     | end
 
-        "if there is a space, shift one more
-        if getline('.')[iStart - 1] == ' '
-            let iStart = iStart + 1     | end
-    end
-    let keys = ''
-    if a:target == 'i'
-        let string_length = strlen(getline('.'))
-        let last_char = getline('.')[string_length - 1]
-        if last_char == ',' || last_char == ';'
-            let keys = iStart.'|v'. (string_length - 1) . '|'
-        else
-            let keys = iStart.'|v$h'
-        end
-    else
-        let keys = iStart.'|v$h'
-    end
+    let column =
+        \ a:target == 'i' ?
+        \     pos[1] : pos[0]
+    let column += 1
+
+    let keys = column . '|v$h'
     return keys
 endfunction "                                                                }}}
 
-fu! s:findAssignment() "                                                   {{{
-    let line = getline('.')
+fu! s:findAssignment(dir, ...) "                                                   {{{
+    let line = a:0 ? a:1 : getline('.')
     let i = 0
-    " Look for [...]=
-    while i >= 0 && i < strlen(line)
-        if (line[i]=='=') || (line[i]=='-' && line[i + 1]=='>')
-            return i + 1
+
+    let patterns = [
+    \ '[><+\-*=/!@#$%^?&:.~]{,2}\=[><+\-*=/!@#$%^?&:.~]{,2}',
+    \ ':',
+    \ '-\>',
+    \ 'return',
+    \ ]
+
+    for pattern in patterns
+        let realPattern =
+        \ '\v' .
+        \ (a:dir == 0 ? '\s*' : '') .
+        \ pattern .
+        \ (a:dir == 1 ? '\s*' : '')
+
+        let m = matchstrpos(line, realPattern)
+        if m[1] != -1
+            return m[1:2]
         end
-        let i = i + 1
-    endwhile
-    " FIXME look for ':'
-    let i = 0
-    while i >= 0 && i < strlen(line)
-        if (line[i]==':')
-            return i + 1
-        end
-        let i = i + 1
-    endwhile
+    endfor
+
     " Fail & return
-    return -1
+    return v:null
 endfu "                                                                }}}
 
+" let g:s = 'String->Value("ok") '
+" let g:R = s:findAssignment(1, g:s)
+
+" if !empty(g:R)
+    " Pp [R, g:s[R[0]:R[1]]]
+" else
+    " Pp g:R
+" end

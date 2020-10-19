@@ -43,6 +43,26 @@ vmap =L <Plug>(visual-Rhs)
 
 ![demo](./demo.gif)
 
+### Support
+
+This plugin uses a pattern to match the following lines:
+
+```
+let lhs = get_value()
+
+Lhs->Rhs("ok");
+
+       lhs "value"
+
+let lhs += 'string'
+
+     lhs => "value"
+
+let lhs >>= 'string'
+
+return rhs
+```
+
 ## License
 
 Same as JSON as far as I'm concerned, but most of the code here is freely adapted from
