@@ -4,15 +4,15 @@
 " Description: LHS/RHS operators
 " !::exe [so %]
 
-onoremap <Plug>(operator-lhs) :<C-u>normal! <C-r>=<SID>selectLeftOperand('i')<CR><CR>
-onoremap <Plug>(operator-rhs) :<C-u>normal! <C-r>=<SID>selectRightOperand('i')<CR><CR>
-onoremap <Plug>(operator-Lhs) :<C-u>normal! <C-r>=<SID>selectLeftOperand('a')<CR><CR>
-onoremap <Plug>(operator-Rhs) :<C-u>normal! <C-r>=<SID>selectRightOperand('a')<CR><CR>
+onoremap <silent> <Plug>(operator-lhs) :<C-u>normal! <C-r>=<SID>selectLeftOperand('i')<CR><CR>
+onoremap <silent> <Plug>(operator-rhs) :<C-u>normal! <C-r>=<SID>selectRightOperand('i')<CR><CR>
+onoremap <silent> <Plug>(operator-Lhs) :<C-u>normal! <C-r>=<SID>selectLeftOperand('a')<CR><CR>
+onoremap <silent> <Plug>(operator-Rhs) :<C-u>normal! <C-r>=<SID>selectRightOperand('a')<CR><CR>
 
-vnoremap <expr><Plug>(visual-lhs) "\<Esc>" . <SID>selectLeftOperand('i')
-vnoremap <expr><Plug>(visual-rhs) "\<Esc>" . <SID>selectRightOperand('i')
-vnoremap <expr><Plug>(visual-Lhs) "\<Esc>" . <SID>selectLeftOperand('a')
-vnoremap <expr><Plug>(visual-Rhs) "\<Esc>" . <SID>selectRightOperand('a')
+vnoremap <silent> <expr><Plug>(visual-lhs) "\<Esc>" . <SID>selectLeftOperand('i')
+vnoremap <silent> <expr><Plug>(visual-rhs) "\<Esc>" . <SID>selectRightOperand('i')
+vnoremap <silent> <expr><Plug>(visual-Lhs) "\<Esc>" . <SID>selectLeftOperand('a')
+vnoremap <silent> <expr><Plug>(visual-Rhs) "\<Esc>" . <SID>selectRightOperand('a')
 
 if get(g:, 'equal_operator_default_mappings', 1)
     omap il <Plug>(operator-rhs)
@@ -55,9 +55,8 @@ fu! s:selectLeftOperand(target) "                                       {{{
         \ a:target == 'i' ?
         \     pos[0] : pos[1]
 
-    echom column
-    let g:keys = column.'|v^'
-    return g:keys
+    let keys = column.'|v^'
+    return keys
 endfu
 fu! s:selectRightOperand(target) "                                      {{{
     let pos = s:findAssignment(1)
