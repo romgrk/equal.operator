@@ -48,17 +48,17 @@ vmap =L <Plug>(visual-Rhs)
 This plugin uses a pattern to match the following lines:
 
 ```
-let lhs = get_value()
+let lhs = rhs()
 
-Lhs->Rhs("ok");
+Lhs->Rhs("rhs");
 
-       lhs "value"
+lhs = Rhs->Rhs("rhs");
 
-let lhs += 'string'
+let lhs += 'rhs'
 
-     lhs => "value"
+     lhs => "rhs"
 
-let lhs >>= 'string'
+let lhs >>= 'rhs'
 
 return rhs
 ```
@@ -66,6 +66,4 @@ return rhs
 ## License
 
 Same as JSON as far as I'm concerned, but most of the code here is freely adapted from
-[Learn Vimscript the Hard Way][1]. (eternal thanks to Steve Losh)
-
-[1](http://learnvimscriptthehardway.stevelosh.com/)
+[Learn Vimscript the Hard Way](http://learnvimscriptthehardway.stevelosh.com/). (eternal thanks to Steve Losh)
