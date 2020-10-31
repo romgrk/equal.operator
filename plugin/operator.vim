@@ -68,8 +68,16 @@ fu! s:selectRightOperand(target) "                                      {{{
         \ a:target == 'i' ?
         \     pos[1] : pos[0]
     let column += 1
+    let end = pos[2]
 
-    let keys = column . '|v$h'
+    let keys = column . '|v'
+
+    if end != -1
+        let keys .= end . '|'
+    else
+        let keys .= '$h'
+    end
+
     return keys
 endfunction "                                                                }}}
 
@@ -89,11 +97,18 @@ fu! s:findAssignment(dir, ...) "                                                
         \ '\v' .
         \ (a:dir == 0 ? '\s*' : '') .
         \ pattern .
-        \ (a:dir == 1 ? '\s*' : '')
+        \ (a:dir == 1 ? '\s*(\s*)@=' : '')
 
+        let end = -1
+        if a:dir == 1
+            let m = matchstrpos(line, '\v[;,]\s*$')
+            if m[1] != -1
+                let end = m[1]
+            end
+        end
         let m = matchstrpos(line, realPattern)
         if m[1] != -1
-            return m[1:2]
+            return m[1:2] + [end]
         end
     endfor
 
@@ -101,8 +116,10 @@ fu! s:findAssignment(dir, ...) "                                                
     return v:null
 endfu "                                                                }}}
 
-" let g:s = 'String->Value("ok") '
+" let x = 42;
+" let g:s = 'let x = 42;'
 " let g:R = s:findAssignment(1, g:s)
+" Pp R, !empty(R) ? s[R[1] - 1:R[2] - 1] : s
 
 " if !empty(g:R)
     " Pp [R, g:s[R[0]:R[1]]]
